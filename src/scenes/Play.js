@@ -84,6 +84,8 @@ class Play extends Phaser.Scene {
         this.timeElapsed = Math.trunc(this.clock.elapsed / 1000);
         this.timeRight.text = this.timeElapsed;
 
+        if (this.clock.elapsed < 0) {this.clock.elapsed = 0}
+
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();
@@ -142,6 +144,10 @@ class Play extends Phaser.Scene {
         this.sound.play('sfx_explosion');
         // score add and repaint
         this.p1Score += ship.points;
+        this.clock.elapsed -= (ship.points/2) * 1000;
+        //this.add.text(game.config.width/2, game.config.height/2 + 128, 'sample text here', scoreConfig).setOrigin(0.5);
+        // this.time.delayedCall(300, () => {
+        //}, null, this);
         this.scoreLeft.text = this.p1Score;     
     }
 }
