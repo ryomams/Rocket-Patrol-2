@@ -6,6 +6,7 @@ class Play extends Phaser.Scene {
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('spaceship2', './assets/spaceship2.png');
         this.load.image('starfield', './assets/spacefield.png');
         // load spritesheet for explosion
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
@@ -24,6 +25,7 @@ class Play extends Phaser.Scene {
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0); 
+        this.ship03 = new Spaceship(this, game.config.width, borderUISize*3 + borderPadding*2, 'spaceship2', 0, 60, 4).setOrigin(0,0); 
         
         // green UI background
         this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
@@ -62,16 +64,26 @@ class Play extends Phaser.Scene {
         //init GAME OVER flag
         this.gameOver = false;
         // 60-second play clock
-        scoreConfig.fixedWidth = 0;
-        this.clock = this.time.delayedCall(60000, () => {
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () => {
+            scoreConfig.fixedWidth = 0;
             this.add.text(game.config.width/2, game.config.height/2, 'FAILURE', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) or <- to FAIL AGAIN', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 128, 'sample text here', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
 
+        scoreConfig.fixedWidth = 100;
+        //show the time elapsed!
+        this.timeElapsed = 0 //probably dont need this variable but im keeping it because i dont want to think about a new solution
+        this.timeRight = this.add.text(game.config.width - (borderUISize + borderPadding + scoreConfig.fixedWidth), borderUISize + borderPadding*2, this.timeElapsed, scoreConfig);
+
     }
     update() {
+        console.log(this.clock)
+        //update the text for the timer
+        this.timeElapsed = Math.trunc(this.clock.elapsed / 1000);
+        this.timeRight.text = this.timeElapsed;
+
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
             this.scene.restart();

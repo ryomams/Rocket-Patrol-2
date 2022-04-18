@@ -1,19 +1,15 @@
 class Menu extends Phaser.Scene {
     constructor() {
         super("menuScene");
-        //why nathan are you making me TYPE ALL THIS BY HANDDDDDDDDDDDDDDDD
-        //debating whether or not it would be easier to make my own menu or brainlessly copy his screenshot
-        //...
-        //screenshot babey
     }
+
     preload() {
-        //load poodio (audio in Poo language)
-        this.load.audio('sfx_select', './assets/blip_select12.wav')
-        //you know what no im not going to type this im going to take it from his repo im too tired
+        // load audio
+        this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
-        //ok now im not copypaste i now copypaste from weebbby site..... tee hee....!
     }
+
     create() {
         // menu text configuration
         let menuConfig = {
@@ -40,24 +36,25 @@ class Menu extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
+
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-          // easy mode
+          // Novice mode
           game.settings = {
             spaceshipSpeed: 3,
             gameTimer: 60000    
           }
           this.sound.play('sfx_select');
-          this.scene.start('playScene');    
+          this.scene.start("playScene");    
         }
         if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
-          // hard mode
+          // Expert mode
           game.settings = {
-            spaceshipSpeed: 4,
+            spaceshipSpeed: 6,
             gameTimer: 45000    
           }
           this.sound.play('sfx_select');
-          this.scene.start('playScene');    
+          this.scene.start("playScene");    
         }
       }
 }
