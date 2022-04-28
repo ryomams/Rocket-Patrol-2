@@ -12,7 +12,7 @@ class Play extends Phaser.Scene {
         this.load.image('starfield', './assets/spacefield.png');
         this.load.image('particle', './assets/the_sus.png');
         // load spritesheet for explosion
-        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 70, frameHeight: 24, startFrame: 0, endFrame: 6});
         // load audio
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
