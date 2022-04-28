@@ -1,3 +1,4 @@
+
 class Play extends Phaser.Scene {
     constructor() {
         super("playScene");
@@ -5,9 +6,11 @@ class Play extends Phaser.Scene {
     preload(){
         // load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
+        this.load.image('rocket2', './assets/rocket2.png');
         this.load.image('spaceship', './assets/spaceship.png');
         this.load.image('spaceship2', './assets/spaceship2.png');
         this.load.image('starfield', './assets/spacefield.png');
+        this.load.image('particle', './assets/the_sus.png');
         // load spritesheet for explosion
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         // load audio
@@ -21,6 +24,7 @@ class Play extends Phaser.Scene {
         this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
         // add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
+        
         // add spaceships (x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
@@ -37,8 +41,10 @@ class Play extends Phaser.Scene {
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        //weapon = 0;
         // animation config
         this.anims.create({
             key: 'explode',
@@ -68,7 +74,7 @@ class Play extends Phaser.Scene {
             scoreConfig.fixedWidth = 0;
             this.add.text(game.config.width/2, game.config.height/2, 'FAILURE', scoreConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) or <- to FAIL AGAIN', scoreConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 128, 'sample text here', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 128, 'YOU ARE A FAILURE', scoreConfig).setOrigin(0.5);
             this.gameOver = true;
         }, null, this);
 
@@ -79,7 +85,7 @@ class Play extends Phaser.Scene {
 
     }
     update() {
-        console.log(this.clock)
+        //console.log(this.clock)
         //update the text for the timer
         this.timeElapsed = Math.trunc(this.clock.elapsed / 1000);
         this.timeRight.text = this.timeElapsed;
@@ -93,6 +99,17 @@ class Play extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
         }
+        //switch "weapons"
+        if (Phaser.Input.Keyboard.JustDown(keyJ)) {
+            weapon = !weapon;
+            console.log(weapon);
+            if (weapon) {
+                this.p1Rocket = null;
+            } else {
+                this.p1Rocket = null;
+            }
+        }
+
         //move the starfield
         this.starfield.tilePositionX -= 4;
         //if the game isnt over, update all the shit
@@ -104,17 +121,17 @@ class Play extends Phaser.Scene {
         } 
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
-          console.log('kaboom ship 03');
+          //console.log('kaboom ship 03');
           this.p1Rocket.reset();
           this.shipExplode(this.ship03);
         }
         if (this.checkCollision(this.p1Rocket, this.ship02)) {
-          console.log('kaboom ship 02');
+          //console.log('kaboom ship 02');
           this.p1Rocket.reset();
           this.shipExplode(this.ship02);
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
-          console.log('kaboom ship 01');
+          //console.log('kaboom ship 01');
           this.p1Rocket.reset();
           this.shipExplode(this.ship01);
         }
@@ -144,7 +161,7 @@ class Play extends Phaser.Scene {
         this.sound.play('sfx_explosion');
         // score add and repaint
         this.p1Score += ship.points;
-        this.clock.elapsed -= (ship.points/2) * 1000;
+        this.clock.elapsed -= (ship.points/4) * 1000;
         //this.add.text(game.config.width/2, game.config.height/2 + 128, 'sample text here', scoreConfig).setOrigin(0.5);
         // this.time.delayedCall(300, () => {
         //}, null, this);
